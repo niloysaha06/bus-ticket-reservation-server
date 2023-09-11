@@ -97,19 +97,13 @@ app.post("/book-ticket", async (req, res) => {
           message: "This seat is already booked",
         });
       }
-      if (seatNumber) {
-        for (let i = 0; i < seatNumber.length; i++) {
-          const ticketBooking = await TicketBooking.create({
-            userId: user["_id"],
-            busId: busId,
-            seatNumber: seatNumber[i],
-            gender: gender,
-          });
-        }
-        return res.status(200).json({ status: true });
-      } else {
-        return res.status(500).json({ status: true });
-      }
+      const ticketBooking = await TicketBooking.create({
+        userId: user["_id"],
+        busId: busId,
+        seatNumber: seatNumber,
+        gender: gender,
+      });
+      return res.status(200).json(ticketBooking);
     }
     return res.status(404).json({
       message: "Failed to create user!",
