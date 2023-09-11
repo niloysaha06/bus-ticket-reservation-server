@@ -9,11 +9,16 @@ app.use(cors());
 app.use(express.json());
 // bus-ticket-reservation
 // c0uQIH9iRduhIoAZ
-mongoose.connect("mongodb+srv://bus-ticket-reservation:c0uQIH9iRduhIoAZ@cluster0.ya2sd.mongodb.net/?retryWrites=true&w=majority").then(() => {
-  console.log("Connected to Mongo DB");
-}).catch(error => {
-  console.log(error);
-});
+mongoose
+  .connect(
+    "mongodb+srv://bus-ticket-reservation:c0uQIH9iRduhIoAZ@cluster0.ya2sd.mongodb.net/?retryWrites=true&w=majority"
+  )
+  .then(() => {
+    console.log("Connected to Mongo DB");
+  })
+  .catch((error) => {
+    console.log(error);
+  });
 
 //get bus list api
 app.get("/buses", async (req, res) => {
@@ -23,7 +28,7 @@ app.get("/buses", async (req, res) => {
   } catch (e) {
     console.log(e.message);
     res.status(500).json({
-      message: e.message
+      message: e.message,
     });
   }
 });
@@ -36,7 +41,7 @@ app.post("/bus", async (req, res) => {
   } catch (e) {
     console.log(e.message);
     res.status(500).json({
-      message: e.message
+      message: e.message,
     });
   }
 });
@@ -44,28 +49,26 @@ app.post("/bus", async (req, res) => {
 //get a specific bus details
 app.get("/bus/:id", async (req, res) => {
   try {
-    const {
-      id
-    } = req.params;
+    const { id } = req.params;
     const bus = await Bus.findById(id);
     if (bus) {
       const ticketBookings = await TicketBooking.find({
-        busId: id
+        busId: id,
       });
       const busWithTicketBookings = {
         bus: bus,
-        ticketBookings: ticketBookings
+        ticketBookings: ticketBookings,
       };
       res.status(200).json(busWithTicketBookings);
     } else {
       res.status(404).json({
-        message: `No bus details found with this id: ${id}`
+        message: `No bus details found with this id: ${id}`,
       });
     }
   } catch (e) {
     console.log(e.message);
     res.status(500).json({
-      message: e.message
+      message: e.message,
     });
   }
 });
@@ -78,7 +81,7 @@ app.post("/book-ticket", async (req, res) => {
     const seatNumber = req.body.seatNumber;
     const gender = req.body.gender;
     user = await User.findOne({
-      email: req.body.email
+      email: req.body.email,
     });
     console.log(user);
     if (user === null || user.length === 0) {
@@ -87,28 +90,34 @@ app.post("/book-ticket", async (req, res) => {
     if (user) {
       const checkSeatBookingStatus = await TicketBooking.find({
         busId: busId,
-        seatNumber: seatNumber
+        seatNumber: seatNumber,
       });
       if (checkSeatBookingStatus.length > 0) {
         return res.status(404).json({
-          message: "This seat is already booked"
+          message: "This seat is already booked",
         });
       }
-      const ticketBooking = await TicketBooking.create({
-        userId: user["_id"],
-        busId: busId,
-        seatNumber: seatNumber,
-        gender: gender
-      });
-      return res.status(200).json(ticketBooking);
+      if (seatNumber) {
+        for (let i = 0; i < seatNumber.length; i++) {
+          const ticketBooking = await TicketBooking.create({
+            userId: user["_id"],
+            busId: busId,
+            seatNumber: seatNumber[i],
+            gender: gender,
+          });
+        }
+        return res.status(200).json({ status: true });
+      } else {
+        return res.status(500).json({ status: true });
+      }
     }
     return res.status(404).json({
-      message: "Failed to create user!"
+      message: "Failed to create user!",
     });
   } catch (e) {
     console.log(e.message);
     res.status(500).json({
-      message: e.message
+      message: e.message,
     });
   }
 });
@@ -116,12 +125,12 @@ app.get("/reset", async (req, res) => {
   try {
     const deleteTicketBooking = await TicketBooking.deleteMany({});
     res.status(200).json({
-      message: "Reset completed!"
+      message: "Reset completed!",
     });
   } catch (e) {
     console.log(e.message);
     res.status(500).json({
-      message: e.message
+      message: e.message,
     });
   }
 });
