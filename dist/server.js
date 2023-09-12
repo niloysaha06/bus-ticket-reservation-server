@@ -115,6 +115,18 @@ app.post("/book-ticket", async (req, res) => {
     });
   }
 });
+
+app.get("/reset-bus/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleteTicketBooking = await TicketBooking.deleteMany({ busId: id });
+    res.status(200).json({ message: "Reset completed!" });
+  } catch (e) {
+    console.log(e.message);
+    res.status(500).json({ message: e.message });
+  }
+});
+
 app.get("/reset", async (req, res) => {
   try {
     const deleteTicketBooking = await TicketBooking.deleteMany({});
