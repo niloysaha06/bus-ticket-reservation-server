@@ -7,8 +7,7 @@ import User from "./models/userModel.js";
 const app = express();
 app.use(cors());
 app.use(express.json());
-// bus-ticket-reservation
-// c0uQIH9iRduhIoAZ
+
 mongoose
   .connect(
     "mongodb+srv://bus-ticket-reservation:c0uQIH9iRduhIoAZ@cluster0.ya2sd.mongodb.net/?retryWrites=true&w=majority"
