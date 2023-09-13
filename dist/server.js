@@ -118,6 +118,7 @@ app.post("/book-ticket", async (req, res) => {
 app.get("/reset-bus/:id", async (req, res) => {
   try {
     const { id } = req.params;
+    console.log(id);
     const deleteTicketBooking = await TicketBooking.deleteMany({ busId: id });
     res.status(200).json({ message: "Reset completed!" });
   } catch (e) {
