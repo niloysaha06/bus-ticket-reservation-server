@@ -103,6 +103,7 @@ app.post("/book-ticket", async (req, res) => {
       }
 
       if (seatNumber) {
+
         if (userId) {
           try {
             await TicketBooking.deleteMany({ userId: userId });
@@ -110,6 +111,7 @@ app.post("/book-ticket", async (req, res) => {
             console.log(e);
           }
         }
+
 
         for (let i = 0; i < seatNumber.length; i++) {
           const ticketBooking = await TicketBooking.create({
@@ -133,6 +135,7 @@ app.post("/book-ticket", async (req, res) => {
   }
 });
 
+
 //get single user information
 app.get("/get-single-user/:userid", async (req, res) => {
   try {
@@ -145,6 +148,13 @@ app.get("/get-single-user/:userid", async (req, res) => {
         .status(404)
         .json({ message: `No User details found with this id: ${userid}` });
     }
+
+app.get("/reset-bus/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(id);
+    const deleteTicketBooking = await TicketBooking.deleteMany({ busId: id });
+    res.status(200).json({ message: "Reset completed!" });
   } catch (e) {
     console.log(e.message);
     res.status(500).json({ message: e.message });
