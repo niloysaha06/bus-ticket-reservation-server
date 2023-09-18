@@ -76,7 +76,6 @@ app.post("/book-ticket", async (req, res) => {
     const gender = req.body.gender;
 
     user = await User.findOne({ email: req.body.email });
-    console.log(user);
     if (user === null || user.length === 0) {
       user = await User.create(req.body);
     }
@@ -90,13 +89,19 @@ app.post("/book-ticket", async (req, res) => {
         return res.status(404).json({ message: "This seat is already booked" });
       }
 
-      const ticketBooking = await TicketBooking.create({
-        userId: user["_id"],
-        busId: busId,
-        seatNumber: seatNumber,
-        gender: gender,
-      });
-      return res.status(200).json(ticketBooking);
+      if (seatNumber) {
+        for (let i = 0; i < seatNumber.length; i++) {
+          const ticketBooking = await TicketBooking.create({
+            userId: user["_id"],
+            busId: busId,
+            seatNumber: seatNumber[i],
+            gender: gender,
+          });
+        }
+        return res.status(200).json({ status: true });
+      } else {
+        return res.status(500).json({ status: true });
+      }
     }
     return res.status(404).json({ message: "Failed to create user!" });
   } catch (e) {
