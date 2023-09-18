@@ -4,13 +4,11 @@ import cors from "cors";
 import Bus from "./models/busModel.js";
 import TicketBooking from "./models/ticketBookingModel.js";
 import User from "./models/userModel.js";
-import { ObjectId } from "mongodb";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-//mongodb+srv://sagarchakrsborty12:hndC35Z5pkHWyn1T@bustticketbooking.uitgki4.mongodb.net/?retryWrites=true&w=majority
 mongoose
   .connect(
     "mongodb+srv://bus-ticket-reservation:c0uQIH9iRduhIoAZ@cluster0.ya2sd.mongodb.net/?retryWrites=true&w=majority"
