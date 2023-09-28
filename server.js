@@ -103,7 +103,7 @@ app.post("/book-ticket", async (req, res) => {
       if (seatNumber) {
         if (userId) {
           try {
-            await TicketBooking.deleteMany({ userId: userId });
+            await TicketBooking.deleteMany({userId: userId, busId: busId})
           } catch (e) {
             console.log(e);
           }
